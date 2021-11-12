@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vhaa.translatorrfx.Controller">
+   <children>
+      <HBox prefHeight="400.0" prefWidth="600.0">
+         <children>
+            <Pane prefHeight="400.0" prefWidth="200">
+               <children>
+                  <ListView id="listOriginalFileData" fx:id="listOriginalFileData" layoutX="6.0" layoutY="31.0" prefHeight="340.0" prefWidth="180.0" stylesheets="@main-view.css" />
+                  <Label layoutX="-2.0" layoutY="1.0" prefHeight="30.0" prefWidth="200.0" text="Original Files">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <font>
+                        <Font name="Verdana" size="13.0" />
+                     </font>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+                  <Label layoutY="371.0" prefHeight="30.0" prefWidth="200.0" text="11 of 11 task finished." textAlignment="CENTER">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <font>
+                        <Font name="Verdana" size="13.0" />
+                     </font>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </Pane>
+            <Pane prefHeight="400.0" prefWidth="200">
+               <children>
+                  <AnchorPane layoutX="3.0" layoutY="35.0">
+                     <children>
+                        <AnchorPane>
+                           <children>
+                              <AnchorPane layoutX="100.0" layoutY="1.0" />
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </AnchorPane>
+                  <Label alignment="CENTER" layoutX="-4.0" layoutY="65.0" prefHeight="30.0" prefWidth="208.0" text="Content of translated file" textAlignment="CENTER">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <font>
+                        <Font name="Verdana" size="13.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="50.0" layoutY="344.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="Chart">
+                     <font>
+                        <Font name="Verdana" size="10.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="1.0" layoutY="35.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" text="Read Languages">
+                     <font>
+                        <Font name="Verdana" size="9.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="105.0" layoutY="35.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" text="Start Translation">
+                     <font>
+                        <Font name="Verdana" size="9.0" />
+                     </font>
+                  </Button>
+                  <TextArea layoutX="10.0" layoutY="98.0" prefHeight="223.0" prefWidth="180.0" />
+               </children>
+            </Pane>
+            <Pane prefHeight="400.0" prefWidth="200">
+               <children>
+                  <Label layoutY="-1.0" prefHeight="38.0" prefWidth="200.0" text="Translated files">
+                     <opaqueInsets>
+                        <Insets left="10.0" />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                     <font>
+                        <Font name="Verdana" size="13.0" />
+                     </font>
+                  </Label>
+                  <ListView layoutX="12.0" layoutY="32.0" prefHeight="340.0" prefWidth="180.0" />
+               </children>
+            </Pane>
+         </children>
+      </HBox>
+   </children>
+</Pane>
