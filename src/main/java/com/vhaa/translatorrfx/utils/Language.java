@@ -41,6 +41,10 @@ public class Language {
         return sentences.get(original);
     }
 
+    public Boolean getCurrentLanguage(String sentence){
+        return !Objects.isNull(sentences.get(sentence)) ;
+    }
+
     public static void main(String[] args) {
         Language lan = new Language("es", "en");
         lan.addSentence("hola", "hello");

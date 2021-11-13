@@ -75,7 +75,7 @@ public class MessageUtils {
      */
     private static void setStyleDialog(Alert dialog) {
         DialogPane dialogPane = dialog.getDialogPane();
-        dialogPane.getStylesheets().add(MessageUtils.class.getResource("/com/vhaa/cateringfx/main-view.css").toExternalForm());
+        dialogPane.getStylesheets().add(MessageUtils.class.getResource("/com/vhaa/translatorrfx/main-view.css").toExternalForm());
         dialogPane.getStyleClass().add("myDialog");
     }
 

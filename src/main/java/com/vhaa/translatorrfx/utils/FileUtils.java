@@ -4,43 +4,31 @@ package com.vhaa.translatorrfx.utils;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FileUtils {
-
     private static final String BASE_PATH = "./dictionaries/";
     public static final String ORIGINAL_FILES = "./originalFiles/";
 
     public static List<Language> readLanguages(Path path) {
-        List<Language> list = new ArrayList<>();
-        BufferedReader br = null;
+        List<Language> listLanguages = new ArrayList<>();
         List<List<String>> lines = new ArrayList<>();
-        try {
-            br = new BufferedReader(new FileReader(BASE_PATH.concat("languages.txt")));
-            String line = "";
-            // TODO: quitar luego unasola
-            boolean unasola = true;
-            while ((line = br.readLine()) != null && unasola) {
-                List<String> lenguage = new ArrayList<>();
-                lenguage.addAll(Arrays.asList(line.split(";")));
-                lines.add(lenguage);
-                // TODO: Quitar luego solo test
-                // unasola = false;
-            }
-        } catch (Exception e) {
-            System.out.println("Exception occurred: " + e.getMessage());
-        } finally {
-            try {
-                br.close();
-            } catch (Exception e) {
-            }
-        }
 
+        try (Stream<String> stream = Files.lines(path)) {
+            stream.forEach(line -> {
+                List<String> language = new ArrayList<>();
+                language.addAll(Arrays.asList(line.split(";")));
+                lines.add(language);
+            });
+        } catch (IOException ex) {
+            System.err.println("Error reading " + ex);
+        }
         lines.stream().forEach(l -> {
-            getDictionaryByLanguage(list, l);
+            getDictionaryByLanguage(listLanguages, l);
             // TODO:  QUIZAS NO VALGA
             /*
             Thread t = new Thread(() -> {
@@ -51,7 +39,7 @@ public class FileUtils {
            */
         });
 
-        return list;
+        return listLanguages;
     }
 
     private static void getDictionaryByLanguage(List<Language> list, List<String> l) {
@@ -64,12 +52,14 @@ public class FileUtils {
             }
             Language lan = new Language(l.get(0), l.get(1));
             original.forEach((o, index) -> {
-                lan.addSentence(original.get(o), translation.get(o));
+                String purgeKey = original.get(o).trim().toLowerCase();
+                if (purgeKey.contains(".")) {
+                    purgeKey = purgeKey.substring(0, purgeKey.indexOf("."));
+                }
+                lan.addSentence(purgeKey, translation.get(o));
             });
             list.add(lan);
 
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -83,15 +73,28 @@ public class FileUtils {
     }
 
 
-    public static void main(String[] args) {
-        // readLanguages(null);
+    public static void main(String[] args) throws IOException {
+        // readLanguages(Paths.get(BASE_PATH.concat("languages.txt")));
 
-        getListaFileData(Paths.get(ORIGINAL_FILES));
+        //getListaFileData(Paths.get(ORIGINAL_FILES));
+
+        //readFile(Paths.get("./translations/exampleDE2/english_exampleDE2.txt"));
+
     }
 
     public static String readFile(Path path) throws IOException {
-
-        return null;
+        String result = new String();
+        try (BufferedReader reader = Files.newBufferedReader(
+                path, StandardCharsets.UTF_8)) {
+            result = reader.lines()
+                    .limit(15)
+                    .map(String::new)
+                    .collect(Collectors.joining("\n"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Result -> \n" + result);
+        return result;
     }
 
     public static void deleteDirectory(Path path) throws IOException {

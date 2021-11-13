@@ -16,7 +16,7 @@
          <children>
             <Pane prefHeight="400.0" prefWidth="200">
                <children>
-                  <ListView id="listOriginalFileData" fx:id="listOriginalFileData" layoutX="6.0" layoutY="31.0" prefHeight="340.0" prefWidth="180.0" stylesheets="@main-view.css" />
+                  <ListView id="listOriginalFileData" fx:id="listOriginalFileData" layoutX="6.0" layoutY="31.0" onMouseClicked="#loadFilesTranslation" prefHeight="340.0" prefWidth="180.0" stylesheets="@main-view.css" />
                   <Label layoutX="-2.0" layoutY="1.0" prefHeight="30.0" prefWidth="200.0" text="Original Files">
                      <opaqueInsets>
                         <Insets />
@@ -28,7 +28,7 @@
                         <Insets left="10.0" />
                      </padding>
                   </Label>
-                  <Label layoutY="371.0" prefHeight="30.0" prefWidth="200.0" text="11 of 11 task finished." textAlignment="CENTER">
+                  <Label fx:id="lblTask" layoutY="371.0" prefHeight="30.0" prefWidth="200.0" text="11 of 11 task finished." textAlignment="CENTER">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -60,22 +60,22 @@
                         <Font name="Verdana" size="13.0" />
                      </font>
                   </Label>
-                  <Button layoutX="50.0" layoutY="344.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="Chart">
+                  <Button id="btnChart" fx:id="btnChart" layoutX="50.0" layoutY="344.0" mnemonicParsing="false" onAction="#loadChart" prefHeight="30.0" prefWidth="100.0" text="Chart">
                      <font>
                         <Font name="Verdana" size="10.0" />
                      </font>
                   </Button>
-                  <Button layoutX="1.0" layoutY="35.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" text="Read Languages">
+                  <Button id="btnReadLanguage" fx:id="btnReadLanguage" layoutX="1.0" layoutY="35.0" mnemonicParsing="false" onAction="#loadLanguages" prefHeight="30.0" prefWidth="90.0" text="Read Languages">
                      <font>
                         <Font name="Verdana" size="9.0" />
                      </font>
                   </Button>
-                  <Button layoutX="105.0" layoutY="35.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" text="Start Translation">
+                  <Button id="btnStartTranslation" fx:id="btnStartTranslation" layoutX="105.0" layoutY="35.0" mnemonicParsing="false" onAction="#startTranslation" prefHeight="30.0" prefWidth="90.0" text="Start Translation">
                      <font>
                         <Font name="Verdana" size="9.0" />
                      </font>
                   </Button>
-                  <TextArea layoutX="10.0" layoutY="98.0" prefHeight="223.0" prefWidth="180.0" />
+                  <TextArea id="txtContentTranslation" fx:id="txtContentTranslation" layoutX="10.0" layoutY="98.0" prefHeight="223.0" prefWidth="180.0" stylesheets="@main-view.css" />
                </children>
             </Pane>
             <Pane prefHeight="400.0" prefWidth="200">
@@ -91,7 +91,7 @@
                         <Font name="Verdana" size="13.0" />
                      </font>
                   </Label>
-                  <ListView layoutX="12.0" layoutY="32.0" prefHeight="340.0" prefWidth="180.0" />
+                  <ListView id="listTranslationFiles" fx:id="listTranslationFiles" layoutX="12.0" layoutY="32.0" onMouseClicked="#loadContentFileTranslation" prefHeight="340.0" prefWidth="180.0" stylesheets="@main-view.css" />
                </children>
             </Pane>
          </children>
