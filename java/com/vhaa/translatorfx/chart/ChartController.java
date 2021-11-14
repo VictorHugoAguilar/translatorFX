@@ -2,7 +2,7 @@ package com.vhaa.translatorfx.chart;
 
 import com.vhaa.translatorfx.utils.FileTimeProcess;
 import com.vhaa.translatorfx.utils.FilesTimes;
-import javafx.event.ActionEvent;
+import com.vhaa.translatorfx.utils.MessageUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
@@ -37,29 +37,27 @@ public class ChartController implements Initializable {
      */
     private void loadProcessList() {
         List<FileTimeProcess> listOfProcess = FilesTimes.getInstance().getList();
+        if(listOfProcess.isEmpty()){
+            MessageUtils.log(MessageUtils.MessageType.ERROR, "Values of chart not loaded correctly");
+            return;
+        }
+
         XYChart.Series data = new XYChart.Series();
-        listOfProcess.forEach(process -> {
-            data.getData().add(new XYChart.Data(process.getFile(), process.getTime()));
-        });
         data.setName("Process duration in milliseconds");
-        barChart.getData().add(data);
+        for (FileTimeProcess process : listOfProcess) {
+            data.getData().add(new XYChart.Data(process.getFile(), process.getTime()));
+        }
+
+        if(barChart.getData().add(data)){
+            MessageUtils.log(MessageUtils.MessageType.INFO, "Values of chart loaded correctly");
+        }
     }
 
     /**
      * Method to return to the main page
      */
     @FXML
-    public void goToMain(ActionEvent event) {
-        /*
-        Parent root = FXMLLoader.load(getClass().getResource("/com/vhaa/translatorrfx/main-view.fxml"));
-        Scene mainScene = new Scene(root);
-        mainScene.getRoot().setStyle("-fx-font-family: 'Verdana'");
-        mainScene.getStylesheets().add(getClass().getResource("/com/vhaa/translatorrfx/main-view.css").toExternalForm());
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.hide();
-        stage.setScene(mainScene);
-        stage.show();
-        */
+    protected void goToMain() {
         Stage stage = (Stage) this.btnBackToMainChart.getScene().getWindow();
         stage.close();
     }

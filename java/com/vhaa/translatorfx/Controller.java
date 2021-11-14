@@ -24,7 +24,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.*;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -33,7 +32,7 @@ import java.util.stream.Stream;
 
 /**
  * Class Main Controller
- *
+ * <p>
  * Controller that manages the processes of reading the dictionary files, the original files, executing the translations of the same
  *
  * @author Victor Hugo Aguilar Aguilar
@@ -70,7 +69,7 @@ public class Controller implements Initializable {
     private TextArea txtContentTranslation;
 
     /**
-     * Initializer method, in which we create the sheduled service that we will then
+     * Initializer method, in which we create the scheduled service that we will then
      * initialize when we execute the translation of the files
      */
     @Override
@@ -79,12 +78,12 @@ public class Controller implements Initializable {
         txtContentTranslation.setEditable(false);
         lblTask.setText("Task for translation");
 
-        scheduledService = new ScheduledService<Boolean>() {
+        scheduledService = new ScheduledService< >() {
             @Override
             protected Task<Boolean> createTask() {
-                return new Task<Boolean>() {
+                return new Task< >() {
                     @Override
-                    protected Boolean call() throws Exception {
+                    protected Boolean call() {
                         return executorService.isTerminated();
                     }
                 };
@@ -125,7 +124,7 @@ public class Controller implements Initializable {
     /**
      * Method that reads the translated files to store them in the list on the right
      */
-    public void loadFilesTranslation( ) {
+    public void loadFilesTranslation() {
         if (listOriginalFiles.isEmpty() ||
                 listOriginalFileData.getSelectionModel().getSelectedItems().isEmpty()) {
             return;
@@ -148,9 +147,9 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Reading method of the translated files and we show it in the visa center
+     * Reading method of the translated files, and we show it in the visa center
      */
-    public void loadContentFileTranslation( ) {
+    public void loadContentFileTranslation() {
         if (listFilesTranslated.isEmpty() ||
                 listTranslationFiles.getSelectionModel().getSelectedItems().isEmpty()) {
             return;
@@ -171,32 +170,31 @@ public class Controller implements Initializable {
      */
     public void startTranslation() {
         resetViews();
+        resetCharts();
 
         loadListFileOrigin();
 
-        List<Runnable> collect = listOriginalFiles.stream().map(l -> createTranslation(l))
+        List<Runnable> collect = listOriginalFiles.stream().map(this::createTranslation)
                 .collect(Collectors.toList());
         executorService = (ThreadPoolExecutor) Executors.newCachedThreadPool();
-        collect.stream().forEach(h -> executorService.submit(h));
+        collect.forEach(h -> executorService.submit(h));
         executorService.shutdown();
     }
 
     /**
-     *  Method that reads the original files and loads them in the variable
+     * Method that reads the original files and loads them in the variable
      */
-    private void loadListFileOrigin()  {
+    private void loadListFileOrigin() {
         try {
             listOriginalFiles = FileUtils.getListaFileData(Paths.get(ORIGINAL_FILES));
         } catch (IOException e) {
             MessageUtils.showError("", "Error in reading the original files ");
-            return;
         }
     }
 
     /**
      * Method that launches a thread for the execution of the complete process for each file that we have.
      *
-     * @param fileData
      * @return Runnable
      */
     private Runnable createTranslation(FileData fileData) {
@@ -205,13 +203,13 @@ public class Controller implements Initializable {
             String nameFile = fileData.getFileName().split("\\.")[0];
             MessageUtils.log(MessageUtils.MessageType.INFO, "File to translate ".concat(nameFile));
 
-            /**
-             * Look for a subfolder (inside images folder) with the same name as its associated file. For instance,
-             * if the file name is exampleSP.txt, then it must look for a folder called exampleSP. If the folder
-             * exists, it must be deleted (using FileUtils.deleteDirectory method)
+            /*
+              Look for a subfolder (inside images folder) with the same name as its associated file. For instance,
+              if the file name is exampleSP.txt, then it must look for a folder called exampleSP. If the folder
+              exists, it must be deleted (using FileUtils.deleteDirectory method)
              */
             try {
-                FileUtils.getListaFileData(Paths.get(DIRECTORY_TRANSLATION)).stream().forEach(
+                FileUtils.getListaFileData(Paths.get(DIRECTORY_TRANSLATION)).forEach(
                         d -> {
                             if (d.getFileName().equalsIgnoreCase(nameFile)) {
                                 try {
@@ -226,21 +224,21 @@ public class Controller implements Initializable {
                 MessageUtils.log(MessageUtils.MessageType.ERROR, "Error in reading the file ".concat(e.getMessage()));
             }
 
-            /**
-             *  Create, again, the folder previously deleted, so that it is empty now (you can use
-             *  Files.createDirectory method for this)
+            /*
+               Create, again, the folder previously deleted, so that it is empty now (you can use
+               Files.createDirectory method for this)
              */
             try {
                 Path path = Paths.get(DIRECTORY_TRANSLATION.concat(nameFile));
-                Files.createDirectory(path, new FileAttribute[]{});
+                Files.createDirectory(path);
             } catch (IOException e) {
                 MessageUtils.log(MessageUtils.MessageType.ERROR, e.getMessage());
             }
 
-            /**
-             * Detect the original language of the current file:you can read the first line of the file and look for
-             * it in the different languages of the list, when we find it we will have the Language object available
-             * to do the translation.
+            /*
+              Detect the original language of the current file:you can read the first line of the file and look for
+              it in the different languages of the list, when we find it we will have the Language object available
+              to do the translation.
              */
             AtomicReference<String> firstLineToTranslate = new AtomicReference<>("");
             List<String> completeListSentenceToTranslate = new ArrayList<>();
@@ -266,16 +264,15 @@ public class Controller implements Initializable {
                         if (purgeKey.contains(".")) {
                             purgeKey = purgeKey.substring(0, purgeKey.indexOf("."));
                         }
-                        boolean isInDictionary = dictionary.getCurrentLanguage(purgeKey);
-                        return isInDictionary;
+                        return dictionary.getCurrentLanguage(purgeKey);
                     })
                     .collect(Collectors.toList());
 
-            /**
-             * Read all the file and translate line by line, writing the result in a new file called:
-             * language.to + ” _ ” + original file name.
+            /*
+              Read all the file and translate line by line, writing the result in a new file called:
+              language.to + ” _ ” + original file name.
              */
-            languagesToTranslate.stream().forEach(dictionary -> {
+            languagesToTranslate.forEach(dictionary -> {
                 MessageUtils.log(MessageUtils.MessageType.INFO, "Translating from ".concat(dictionary.getFrom()));
                 MessageUtils.log(MessageUtils.MessageType.INFO, "Translating to ".concat(dictionary.getTo()));
                 try {
@@ -294,7 +291,7 @@ public class Controller implements Initializable {
                     FileWriter fw = new FileWriter(file);
                     Writer bw = new BufferedWriter(fw);
 
-                    completeListSentenceToTranslate.stream().forEach(lineTo -> {
+                    completeListSentenceToTranslate.forEach(lineTo -> {
                         String sentenceToTranslate = lineTo.trim().toLowerCase();
                         if (sentenceToTranslate.contains(".")) {
                             sentenceToTranslate = sentenceToTranslate.substring(0, sentenceToTranslate.indexOf("."));
@@ -302,11 +299,10 @@ public class Controller implements Initializable {
                         String translatedSentence = dictionary.getTraduction(sentenceToTranslate);
                         try {
                             if (Objects.isNull(translatedSentence)) {
-                                // MessageUtils.log(MessageUtils.MessageType.ERROR, "Not found translation ".concat(translatedSentence));
+                                //MessageUtils.log(MessageUtils.MessageType.ERROR, "Not translation found for -> ".concat(sentenceToTranslate));
+                                return;
                             }
-                            if (!Objects.isNull(translatedSentence)) {
-                                bw.write(translatedSentence + "\n");
-                            }
+                            bw.write(translatedSentence + "\n");
                         } catch (IOException e) {
                             MessageUtils.log(MessageUtils.MessageType.ERROR, e.getMessage());
                         }
@@ -317,9 +313,9 @@ public class Controller implements Initializable {
                 }
             });
 
-            /**
-             * After all these translation processes have finished, the thread must use Platform.runLater method to
-             * add file original filename to the left list view
+            /*
+              After all these translation processes have finished, the thread must use Platform.runLater method to
+              add file original filename to the left list view
              */
             Platform.runLater(() -> {
                 long endProcess = System.currentTimeMillis();
@@ -347,21 +343,28 @@ public class Controller implements Initializable {
     }
 
     /**
+     * Method for reset static memory chart
+     */
+    private void resetCharts() {
+        FilesTimes.getInstance().clearList();
+    }
+
+    /**
      * Method to launch the modal view of the graphs
-     * @param event
+     *
      */
     public void loadChart(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/com/vhaa/translatorfx/chart-view.fxml"));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/vhaa/translatorfx/chart-view.fxml")));
             Scene chartScene = new Scene(root, 600, 400);
-            chartScene.getStylesheets().add(getClass().getResource("main-View.css").toExternalForm());
+            chartScene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("main-View.css")).toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("TranslatorFX");
             stage.setScene(chartScene);
             // Create Modal
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initOwner(
-                    ((Node)event.getSource()).getScene().getWindow() );
+                    ((Node) event.getSource()).getScene().getWindow());
             // Show Stage
             stage.show();
         } catch (IOException e) {
