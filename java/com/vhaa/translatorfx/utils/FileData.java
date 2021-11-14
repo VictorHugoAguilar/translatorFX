@@ -1,5 +1,10 @@
 package com.vhaa.translatorfx.utils;
 
+/**
+ * Class FileData
+ *
+ * @author Victor Hugo Aguilar Aguilar
+ */
 public class FileData {
 
     private String fileName;

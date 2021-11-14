@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
- * Class Message Utiles.
+ * Class Message Utils.
  *
  * Class to manipulate the messages and register events in the logs.
  *

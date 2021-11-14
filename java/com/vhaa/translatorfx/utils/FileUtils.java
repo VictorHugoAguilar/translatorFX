@@ -9,6 +9,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Class FileUtils
+ *
+ * @author Victor Hugo Aguilar Aguilar
+ */
 public class FileUtils {
     private static final String BASE_PATH = "./dictionaries/";
 
@@ -55,16 +60,6 @@ public class FileUtils {
                 (map, streamValue) -> map.put(map.size(), streamValue),
                 (map, map2) -> {
                 });
-    }
-
-
-    public static void main(String[] args) throws IOException {
-        // readLanguages(Paths.get(BASE_PATH.concat("languages.txt")));
-
-        //getListaFileData(Paths.get(ORIGINAL_FILES));
-
-        //readFile(Paths.get("./translations/exampleDE2/english_exampleDE2.txt"));
-
     }
 
     public static String readFile(Path path) throws IOException {

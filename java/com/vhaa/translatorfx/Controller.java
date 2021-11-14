@@ -31,6 +31,13 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Class Main Controller
+ *
+ * Controller that manages the processes of reading the dictionary files, the original files, executing the translations of the same
+ *
+ * @author Victor Hugo Aguilar Aguilar
+ */
 public class Controller implements Initializable {
     private static final String DIRECTORY_ORIGINAL = "./dictionaries/";
     private static final String FILE_LANGUAGE = "languages.txt";
@@ -62,6 +69,10 @@ public class Controller implements Initializable {
     @FXML
     private TextArea txtContentTranslation;
 
+    /**
+     * Initializer method, in which we create the sheduled service that we will then
+     * initialize when we execute the translation of the files
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         btnStartTranslation.setDisable(true);
@@ -94,9 +105,11 @@ public class Controller implements Initializable {
                 lblTask.setText(executorService.getCompletedTaskCount() + " of " +
                         executorService.getTaskCount() + " task finished");
         });
-
     }
 
+    /**
+     * Dictionary loading method, read the languages of the same and leave it in a variable
+     */
     public void loadLanguages() {
         try {
             dictionaries = FileUtils.readLanguages(Paths.get(DIRECTORY_ORIGINAL.concat(FILE_LANGUAGE)));
@@ -109,6 +122,9 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * Method that reads the translated files to store them in the list on the right
+     */
     public void loadFilesTranslation( ) {
         if (listOriginalFiles.isEmpty() ||
                 listOriginalFileData.getSelectionModel().getSelectedItems().isEmpty()) {
@@ -131,6 +147,9 @@ public class Controller implements Initializable {
         listTranslationFiles.getItems().setAll(listFilesTranslated);
     }
 
+    /**
+     * Reading method of the translated files and we show it in the visa center
+     */
     public void loadContentFileTranslation( ) {
         if (listFilesTranslated.isEmpty() ||
                 listTranslationFiles.getSelectionModel().getSelectedItems().isEmpty()) {
@@ -147,15 +166,13 @@ public class Controller implements Initializable {
         }
     }
 
-
+    /**
+     * Method that we launched to create the translations of the original files
+     */
     public void startTranslation() {
         resetViews();
-        try {
-            loadListFileOrigin();
-        } catch (IOException e) {
-            MessageUtils.showError("", "Error in reading the original files ");
-            return;
-        }
+
+        loadListFileOrigin();
 
         List<Runnable> collect = listOriginalFiles.stream().map(l -> createTranslation(l))
                 .collect(Collectors.toList());
@@ -164,10 +181,24 @@ public class Controller implements Initializable {
         executorService.shutdown();
     }
 
-    private void loadListFileOrigin() throws IOException {
-        listOriginalFiles = FileUtils.getListaFileData(Paths.get(ORIGINAL_FILES));
+    /**
+     *  Method that reads the original files and loads them in the variable
+     */
+    private void loadListFileOrigin()  {
+        try {
+            listOriginalFiles = FileUtils.getListaFileData(Paths.get(ORIGINAL_FILES));
+        } catch (IOException e) {
+            MessageUtils.showError("", "Error in reading the original files ");
+            return;
+        }
     }
 
+    /**
+     * Method that launches a thread for the execution of the complete process for each file that we have.
+     *
+     * @param fileData
+     * @return Runnable
+     */
     private Runnable createTranslation(FileData fileData) {
         return () -> {
             long initProcess = System.currentTimeMillis();
@@ -302,6 +333,9 @@ public class Controller implements Initializable {
 
     }
 
+    /**
+     * Method that resets the values and clears the views
+     */
     private void resetViews() {
         listOriginalFileData.getItems().clear();
         listTranslationFiles.getItems().clear();
@@ -312,6 +346,10 @@ public class Controller implements Initializable {
         scheduledService.restart();
     }
 
+    /**
+     * Method to launch the modal view of the graphs
+     * @param event
+     */
     public void loadChart(ActionEvent event) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/com/vhaa/translatorfx/chart-view.fxml"));

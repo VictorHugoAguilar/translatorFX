@@ -1,5 +1,10 @@
 package com.vhaa.translatorfx.utils;
 
+/**
+ *  Class FileTimeProcess
+ *
+ *  @author Victor Hugo Aguilar Aguilar
+ */
 public class FileTimeProcess {
 
     private String file;

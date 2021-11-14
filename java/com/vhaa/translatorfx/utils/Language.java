@@ -2,6 +2,11 @@ package com.vhaa.translatorfx.utils;
 
 import java.util.*;
 
+/**
+ * Class Language
+ *
+ * @author Victor Hugo Aguilar Aguilar
+ */
 public class Language {
 
     private String from;

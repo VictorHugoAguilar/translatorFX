@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Class FilesTimes
+ *
+ * @author Victor Hugo Aguilar Aguilar
+ */
 public class FilesTimes {
 
     private static FilesTimes filesTimes;
